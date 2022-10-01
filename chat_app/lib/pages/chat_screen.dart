@@ -26,7 +26,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void getCurrent() async {
     try {
-      final user = await _auth.currentUser!;
+      final user =  _auth.currentUser!;
+      // ignore: unnecessary_null_comparison
       if (user != null) {
         loggInUser = user;
         print(loggInUser.email);
@@ -57,9 +58,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('ChatApp'), actions: [
+        appBar: AppBar(title: const Text('ChatApp'), actions: [
           IconButton(
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
               onPressed: () {
                 _auth.signOut();
                 Navigator.pop(context);
@@ -93,18 +94,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                 'sender': loggInUser.email
                               });
                             },
-                            child: Text('Send', style: kSendButtonStyle))
+                            child: const Text('Send', style: kSendButtonStyle))
                       ]))
             ]));
   }
 
-  getStreamData() async {
-    return Column(children: []);
-  }
 }
 
 class MessageStream extends StatelessWidget {
-  MessageStream({Key? key, required this.fireobj}) : super(key: key);
+  const MessageStream({Key? key, required this.fireobj}) : super(key: key);
   final FirebaseFirestore fireobj;
 
   @override
@@ -146,7 +144,7 @@ class MessageBubble extends StatelessWidget {
   final String messageText;
   final String messageSender;
   final bool isMe;
-  MessageBubble(
+  const MessageBubble(
       {super.key,
       required this.messageText,
       required this.messageSender,
@@ -154,12 +152,12 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(messageSender, style: TextStyle(fontSize: 12)),
+          Text(messageSender, style: const TextStyle(fontSize: 12)),
           Material(
             elevation: 5,
             borderRadius: isMe

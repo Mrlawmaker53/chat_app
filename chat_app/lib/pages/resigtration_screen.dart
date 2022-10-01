@@ -17,6 +17,9 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  TextEditingController txtcontroller = TextEditingController();
+  TextEditingController passcontroller = TextEditingController();
+
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
   late String email;
@@ -40,25 +43,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    textAlign: TextAlign.center,
-                    onChanged: (value) {
-                      email = value;
-                    },
-                    decoration: kTextFieldDecoration.copyWith(
-                        hintText: 'Enter your Email'))),
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: txtcontroller,
+                keyboardType: TextInputType.phone,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  email = '$value@gmail.com';
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Enter your phone number'),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    password = value;
-                  },
-                  obscureText: true,
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your Password')),
+                controller: passcontroller,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  password = value;
+                },
+                obscureText: true,
+                decoration: kTextFieldDecoration.copyWith(
+                  hintText: 'Enter your Password',
+                ),
+              ),
             ),
             RoundedButton(
                 colour: Colors.blueAccent,
@@ -71,15 +80,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   try {
                     final newUser = await _auth.createUserWithEmailAndPassword(
                         email: email, password: password);
+                    
                     // ignore: unnecessary_null_comparison
                     if (newUser != null) {
                       // ignore: use_build_context_synchronously
                       Navigator.pushNamed(context, ChatScreen.id);
+                      txtcontroller.clear();
+                      passcontroller.clear();
+                      
                     }
+
                     setState(() {
                       showSpinner = false;
                     });
                   } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(e
+                          .toString()
+                          .replaceAll('email address', 'mobile number')
+                          .split(']')[1]),
+                    ));
+                    setState(() {
+                      showSpinner = false;
+                    });
                     if (kDebugMode) {
                       print(e);
                     }

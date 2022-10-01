@@ -16,8 +16,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
-  var email=""; 
-  var password="";
+  var email = "";
+  var password = "";
   bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
@@ -41,16 +41,17 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.phone,
                       textAlign: TextAlign.center,
                       onChanged: (value) {
-                        email = value;
+                        email = '$value@gmail.com';
                       },
                       decoration: kTextFieldDecoration.copyWith(
-                          hintText: 'Enter your Email'))),
+                          hintText: 'Enter your phone number'))),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                    textAlign: TextAlign.center,
                     onChanged: (value) {
                       password = value;
                     },
@@ -74,11 +75,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pop(context);
                         Navigator.pushNamed(context, ChatScreen.id);
                       }
+
                       setState(() {
                         showSpinner = false;
                       });
                     } catch (e) {
-                      // ignore: avoid_print
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(e
+                            .toString()
+                            .replaceAll('email address', 'mobile number')
+                            .split(']')[1]),
+                      ));
+                      setState(() {
+                        showSpinner = false;
+                      });
                       print(e);
                     }
                   })
